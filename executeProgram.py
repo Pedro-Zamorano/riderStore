@@ -1,4 +1,8 @@
-from functions import * 
+from functions import *
+from db_tables import *
+
+# Creando tablas en base de datos
+dbExecute()
 
 value = True
 while value:
