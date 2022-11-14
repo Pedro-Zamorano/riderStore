@@ -1,22 +1,33 @@
 from riderStoreCore import *
+import time
+import cx_Oracle
 
-# Funciones para el vendedor
+# Conexion a la BBDD
+connstr = "riderStore/RiderCore22@localhost:1521/XEPDB1"
+conn = cx_Oracle.connect(connstr)
+curs = conn.cursor()
+
+# Funciones para el login
 def login(user, password):
-    if user == "v" and password == "1": # Validar con usuarios en base de datos
-        print("\nLogin satisfactorio\n")        
-        # Llamado a función MENU
-        menu()
+    
+    # Consulta a la BBDD sobre usuario y contraseña
+    curs.execute("SELECT TRIM(nombre), TRIM(contrasena), privilegio FROM colaborador")
+    access = curs.fetchall()
+    
+    for userPass in access:
+        #print(userPass)
+        if userPass[0] == str(user) and userPass[1] == str(password) and userPass[2] == 1:
+            print("Login Correcto!!")
+            menuVendedor()
+        elif userPass[0] == str(user) and userPass[1] == str(password) and userPass[2] == 2:
+            print("Login Correcto!!")
+            menuAdmin()
+        
+    else:
+        print("Login Fallido!!!,\n Intente nuevamente\n")
 
-    elif user != "v":
-        print("Usuario no valido\n")
-        return True
-
-    elif password != "1":
-        print("Contraseña no valida\n")
-        return True
-
-
-def menu(): 
+# Menu principal VENDEDOR
+def menuVendedor():
     value = True
     while value:   
         try:
@@ -61,3 +72,30 @@ def opcMenu(opc):
     elif opc == 4:
         print("opcion 4... SALIENDO")
         exit()
+
+
+# Menu principal ADMINISTRADOR
+def menuAdmin():
+    value = True
+    while value:   
+        try:
+            print("""
+                *** Bienvenido al Menú de ADMINISTRADOR ***\n
+                1.- Reporte de ventas
+                2.- Consultar productos
+                3.- Registrar productos
+                4.- Registrar nuevo usuario
+                5.- Salir
+                \n""")
+            
+            option = int(input("Ingrese su opción: "))
+            
+            if option < 1 or option > 5:
+                print("\nLa opción ingresada esta fuera de rango!. \nIntente nuevamente...\n")
+                value = True
+            else:
+                print(f"Selecciono la opcion {option}")
+        
+        except ValueError:
+            print("El dato ingresado no es un numero! \nIngrese nuevamente...\n")
+            value = True

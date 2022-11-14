@@ -31,7 +31,8 @@ curs = conn.cursor()
 # TABLA PERSONA
 def tablaPersona():
     if validadorTablas('persona'):
-        print("Tabla 'PERSONA' existe en el sistema.")
+        #print("Tabla 'PERSONA' existe en el sistema.")
+        pass
     else:
         persona = '''CREATE TABLE persona(
             id INT PRIMARY KEY,
@@ -52,7 +53,8 @@ def tablaPersona():
 # TABLA CLIENTE
 def tablaCliente():
     if validadorTablas('cliente'):
-        print("Tabla 'CLIENTE' existe en el sistema.")
+        #print("Tabla 'CLIENTE' existe en el sistema.")
+        pass
     else:
         cliente = '''CREATE TABLE cliente(
             id INT PRIMARY KEY,
@@ -67,7 +69,8 @@ def tablaCliente():
 # TABLA EMPRESA
 def tablaEmpresa():
     if validadorTablas('empresa'):
-        print("Tabla 'EMPRESA' existe en el sistema.")
+        #print("Tabla 'EMPRESA' existe en el sistema.")
+        pass
     else:
         empresa = '''CREATE TABLE empresa(
             id INT PRIMARY KEY,
@@ -89,7 +92,8 @@ def tablaEmpresa():
 # TABLA COLABORADOR
 def tablaColaborador():
     if validadorTablas('colaborador'):
-        print("Tabla 'COLABORADOR' existe en el sistema.")
+        #print("Tabla 'COLABORADOR' existe en el sistema.")
+        pass
     else:
         colaborador = '''CREATE TABLE colaborador(
             id INT PRIMARY KEY,
@@ -100,7 +104,9 @@ def tablaColaborador():
             prevision CHAR(10),
             cargo CHAR(30),
             jefe_directo CHAR(20),
-            tipo_contrato CHAR(15)
+            tipo_contrato CHAR(15),
+            privilegio INT,
+            contrasena CHAR(8)
         )'''
         curs.execute(colaborador)
         print("Se ha creado la tabla 'COLABORADOR'.")
@@ -108,7 +114,8 @@ def tablaColaborador():
 # TABLA FACTURA
 def tablaFactura():
     if validadorTablas('factura'):
-        print("Tabla 'FACTURA' existe en el sistema.")
+        #print("Tabla 'FACTURA' existe en el sistema.")
+        pass
     else:
         factura = '''CREATE TABLE factura(
             id INT PRIMARY KEY,
@@ -122,7 +129,8 @@ def tablaFactura():
 # TABLA FACTURA_COMPRA
 def tablaFCompra():
     if validadorTablas('factura_compra'):
-        print("Tabla 'FACTURA_COMPRA' existe en el sistema.")
+        #print("Tabla 'FACTURA_COMPRA' existe en el sistema.")
+        pass
     else:
         f_compra = '''CREATE TABLE factura_compra(
             id INT PRIMARY KEY,
@@ -135,7 +143,8 @@ def tablaFCompra():
 # TABLA FACTURA_VENTA
 def tablaFVenta():
     if validadorTablas('factura_venta'):
-        print("Tabla 'FACTURA_VENTA' existe en el sistema.")
+        #print("Tabla 'FACTURA_VENTA' existe en el sistema.")
+        pass
     else:
         f_venta = '''CREATE TABLE factura_venta(
         id INT PRIMARY KEY,
@@ -148,7 +157,8 @@ def tablaFVenta():
 # TABLA DETALLE_FACTURA_COMPRA
 def tablaDFCompra():
     if validadorTablas('detalle_factura_compra'):
-        print("Tabla 'DETALLE_FACTURA_COMPRA' existe en el sistema.")
+        #print("Tabla 'DETALLE_FACTURA_COMPRA' existe en el sistema.")
+        pass
     else:
         det_fact_compra = '''CREATE TABLE detalle_factura_compra(
             id INT PRIMARY KEY,
@@ -161,7 +171,8 @@ def tablaDFCompra():
 # TABLA DETALLE_FACTURA_VENTA
 def tablaDFVenta():
     if validadorTablas('detalle_factura_venta'):
-        print("Tabla 'DETALLE_FACTURA_VENTA' existe en el sistema.")
+        #print("Tabla 'DETALLE_FACTURA_VENTA' existe en el sistema.")
+        pass
     else:
         det_fact_venta = '''CREATE TABLE detalle_factura_venta(
             id INT PRIMARY KEY,
@@ -174,7 +185,8 @@ def tablaDFVenta():
 # TABLA PRODUCTO
 def tablaProducto():
     if validadorTablas('producto'):
-        print("Tabla 'PRODUCTO' existe en el sistema.")
+        #print("Tabla 'PRODUCTO' existe en el sistema.")
+        pass
     else:
         producto = '''CREATE TABLE producto(
             id INT PRIMARY KEY,
@@ -183,7 +195,8 @@ def tablaProducto():
             familia_producto CHAR(20),
             stock INT,
             unidad_venta CHAR(10),
-            posicion CHAR(20)
+            posicion CHAR(20),
+            codigo_producto CHAR(30)
         )'''
         curs.execute(producto)
         print("Se ha creado la tabla 'PRODUCTO'.")
@@ -191,7 +204,8 @@ def tablaProducto():
 # TABLA GUIA_DESPACHO
 def tablaGDespacho():
     if validadorTablas('guia_despacho'):
-        print("Tabla 'GUIA_DESPACHO' existe en el sistema.")
+        #print("Tabla 'GUIA_DESPACHO' existe en el sistema.")
+        pass
     else:
         g_despacho = '''CREATE TABLE guia_despacho(
             id INT PRIMARY KEY,
@@ -206,7 +220,8 @@ def tablaGDespacho():
 # TABLA DETALLE_GUIA_DESPACHO
 def tablaDGDespacho():
     if validadorTablas('detalle_guia_despacho'):
-        print("Tabla 'DETALLE_GUIA_DESPACHO' existe en el sistema.")
+        #print("Tabla 'DETALLE_GUIA_DESPACHO' existe en el sistema.")
+        pass
     else:
         det_guia_despacho = '''CREATE TABLE detalle_guia_despacho(
             id INT PRIMARY KEY,

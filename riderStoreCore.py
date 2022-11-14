@@ -8,7 +8,7 @@ class Persona:
     ciudad = ''
     telefono = 0
     email = ''
-    
+
     def __init__(self, nombre, apellido_paterno, apellido_materno, rut, direccion, ciudad, telefono, email):
         self.nombre = nombre
         self.apellido_paterno = apellido_paterno
@@ -27,6 +27,7 @@ class Persona:
     
     def agregar(self):
         pass
+
 
 class Cliente:
     nombre = ''
@@ -48,6 +49,7 @@ class Cliente:
 
     def agregarMetodoPago(self):
         pass         
+
 
 class Empresa:
     razon_social = ''
@@ -85,7 +87,8 @@ class Empresa:
     
     def agregarTipoEmpresa(self):
         pass
-    
+
+
 class Colaborador:
     nombre = ''
     apellido_paterno = ''
@@ -112,6 +115,7 @@ class Colaborador:
     def muestraFechaRegistro(self):
         pass
 
+
 class Factura:
     numero_factura = 0
     rut = ''
@@ -130,7 +134,8 @@ class Factura:
     
     def agregarNuevaFactura(self):
         pass 
-    
+
+
 class Factura_compra(Factura):
     giro = ''
     direccion = ''
@@ -147,7 +152,8 @@ class Factura_compra(Factura):
     
     def agregaCantidad(self):
         pass
-    
+
+
 class Factura_venta(Factura):
     giro = ''
     direccion = ''
@@ -164,7 +170,8 @@ class Factura_venta(Factura):
     
     def agregaCantidad(self):
         pass   
-    
+
+
 class Detalle_factura_compra(Factura_compra):
     cantidad = 0
     precio = 0
@@ -181,6 +188,7 @@ class Detalle_factura_compra(Factura_compra):
 
     def agregarProductoStock(self):
         pass
+
 
 class Detalle_factura_venta(Factura_venta):
     cantidad = 0
@@ -199,31 +207,30 @@ class Detalle_factura_venta(Factura_venta):
     def mostrarFechaFactura(self):
         pass
 
+
 class Producto:
     nombre = ''
     descripcion = ''
     familia_producto = ''
     stock = 0
     unidad_venta = ''
-    posicion = ''
+    posicion = ""
+    codigo_producto = ''
 
-    def __init__(self, nombre, descripcion, familia_producto, stock, unidad_venta, posicion):
+    def __init__(self, nombre, descripcion, familia_producto, stock, unidad_venta, posicion, codigo_producto):
         self.nombre = nombre
         self.descripcion = descripcion
         self.familia_producto = familia_producto
         self.stock = stock
         self.unidad_venta = unidad_venta
         self.posicion = posicion
+        self.codigo_producto = codigo_producto
     
-    def mostrarStockDisponible(self):
+    def buscarProducto(self):
+        # Buscando producto en la tabla
         pass
-    
-    def mostrarPrecioVenta(self):
-        pass
-    
-    def actualizarPosicionBodega(self):
-        pass  
-    
+
+
 class Guia_despacho:
     numero_guia = 0
     fecha_emision = ''
@@ -238,7 +245,8 @@ class Guia_despacho:
     
     def mostrarFechaDespacho(self):
         pass  
-    
+
+
 class Detalle_guia_despacho(Guia_despacho):
     cantidad = 0
     precio = 0    
