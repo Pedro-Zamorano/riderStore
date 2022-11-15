@@ -3,7 +3,8 @@ import cx_Oracle
 
 # Validando si la tabla existe en la base de datos
 def validadorTablas(tablename):
-    connstr = "riderStore/RiderCore22@localhost:1521/XEPDB1"
+    # connstr = "riderStore/RiderCore22@localhost:1521/XEPDB1" # Acceso BBDD PC escritorio
+    connstr = "SYSTEM/Password.2022@192.168.56.1:1521/XEPDB1" # Acceso BBDD Notebook
     conn = cx_Oracle.connect(connstr)
     curs = conn.cursor()
     
@@ -24,7 +25,8 @@ def validadorTablas(tablename):
 # Si NO existen, se crean
 
 # Conexion a base de datos
-connstr = "riderStore/RiderCore22@localhost:1521/XEPDB1"
+#connstr = "riderStore/RiderCore22@localhost:1521/XEPDB1" # Acceso BBDD PC escritorio
+connstr = "SYSTEM/Password.2022@192.168.56.1:1521/XEPDB1" # Acceso BBDD Notebook
 conn = cx_Oracle.connect(connstr)
 curs = conn.cursor()
 
@@ -46,8 +48,6 @@ def tablaPersona():
             email CHAR(30)
         )'''
         curs.execute(persona)
-        curs.close()
-        conn.close()
         print("Se ha creado la tabla 'PERSONA'.")
 
 # TABLA CLIENTE

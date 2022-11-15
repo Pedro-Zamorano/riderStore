@@ -1,9 +1,9 @@
 from riderStoreCore import *
-import time
 import cx_Oracle
 
 # Conexion a la BBDD
-connstr = "riderStore/RiderCore22@localhost:1521/XEPDB1"
+# connstr = "riderStore/RiderCore22@localhost:1521/XEPDB1" # Acceso BBDD PC escritorio
+connstr = "SYSTEM/Password.2022@192.168.56.1:1521/XEPDB1" # Acceso BBDD Notebook
 conn = cx_Oracle.connect(connstr)
 curs = conn.cursor()
 
