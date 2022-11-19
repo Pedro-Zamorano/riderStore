@@ -1,3 +1,11 @@
+import cx_Oracle
+
+# Conexion a la BBDD
+#connstr = "riderStore/RiderCore22@localhost:1521/XEPDB1" # Acceso BBDD PC escritorio
+connstr = "riderStore/RiderCore22@192.168.56.1:1521/XEPDB1" # Acceso BBDD Notebook
+conn = cx_Oracle.connect(connstr)
+curs = conn.cursor()
+
 
 class Persona:
     nombre = ''
@@ -18,15 +26,6 @@ class Persona:
         self.ciudad = ciudad
         self.telefono = telefono
         self.email = email
-    
-    def mostrarFechaNac(self):
-        pass
-    
-    def mostrarSexo(self):
-        pass
-    
-    def agregar(self):
-        pass
 
 
 class Cliente:
@@ -40,53 +39,6 @@ class Cliente:
         self.apellido_paterno = apellido_paterno
         self.telefono = telefono
         self.email = email 
-    
-    def muestraFechaRegistro(self):
-        pass
-
-    def muestraEstado(self):
-        pass
-
-    def agregarMetodoPago(self):
-        pass         
-
-
-class Empresa:
-    razon_social = ''
-    rut = ''
-    giro = ''
-    direccion = ''
-    ciudad = ''
-    telefono = 0
-    email = ''
-    metodo_pago = ''
-    plazo = 0
-    tipo_empresa = ''
-    pagina_web = ''
-    linkedin = ''
-
-    def __init__(self, razon_social, rut, giro, direccion, ciudad, telefono, email, metodo_pago, plazo, tipo_empresa, pagina_web, linkedin):
-        self.razon_social = razon_social
-        self.rut = rut
-        self.giro = giro
-        self.direccion = direccion
-        self.ciudad = ciudad
-        self.telefono = telefono
-        self.email = email
-        self.metodo_pago = metodo_pago
-        self.plazo = plazo
-        self.tipo_empresa = tipo_empresa
-        self.pagina_web = pagina_web
-        self.linkedin = linkedin
-    
-    def mostrarPago(self):
-        pass
-    
-    def mostrarPlazoDeEntrega(self):
-        pass
-    
-    def agregarTipoEmpresa(self):
-        pass
 
 
 class Colaborador:
@@ -109,32 +61,232 @@ class Colaborador:
         self.jefe_directo = jefe_directo
         self.tipo_contrato = tipo_contrato
 
-    def agregarNuevoColaborador(self):
-        pass
-    
-    def muestraFechaRegistro(self):
-        pass
-
 
 class Producto:
     nombre = ''
-    descripcion = ''
-    familia_producto = ''
-    stock = 0
-    unidad_venta = ''
-    posicion = ""
     codigo_producto = ''
+    precio = 0
 
-    def __init__(self, nombre, descripcion, familia_producto, stock, unidad_venta, posicion, codigo_producto):
-        self.nombre = nombre
-        self.descripcion = descripcion
-        self.familia_producto = familia_producto
-        self.stock = stock
-        self.unidad_venta = unidad_venta
-        self.posicion = posicion
+    def __init__(self, nombre="", codigo_producto="", precio=0):
+        self.nombre = nombre        
         self.codigo_producto = codigo_producto
-    
-    def buscarProducto(self):
-        # Buscando producto en la tabla
-        pass
+        self.precio = precio
 
+
+    def mostrarProducto(self):
+        # Buscando producto en la tabla
+        curs.execute("SELECT * FROM producto")
+        
+        # Mostrar productos en pantalla
+        print("\n*** PRODUCTOS DISPONIBLES ***\n")
+        viewProducts = curs.fetchall()
+        value = True
+        while value:
+            for product in viewProducts:
+                lista = [
+                    "Nombre: " + product[1],
+                    "Stock: " + str(product[4]),
+                    "Precio: " + str(product[8]),
+                    "Posición: " + product[6],
+                    "Código: " + product[7]                    
+                ]
+                print(lista)
+            
+            try:
+                busqueda = input("\nIngrese el codigo del producto: ")
+                
+                curs.execute("SELECT * FROM producto WHERE codigo_producto = '%s'"% busqueda.upper())
+                products = curs.fetchall()
+                
+                if products == []:
+                    print("\nProducto no encontrado!\n")
+                else:
+                    # Itera el ID de VENTAS
+                    sql_id = "SELECT id_venta FROM venta"
+                    curs.execute(sql_id)
+                    ids = curs.fetchall()
+                    for id in ids:
+                        id
+                    last_id = id[0]+1
+                    
+                    # Añadiendo el producto en VENTAS
+                    for product in products:
+                        print("\n** PRODUCTO SELECCIONADO **")
+                        print(product)
+                        idProducto = product[0]
+                        self.nombre = product[1]
+                        self.precio = product[8]
+                        self.codigo_producto = product[7]
+                        
+                        sql = "INSERT INTO venta(id_venta, nombre_producto, precio_producto, codigo_producto, id_producto) VALUES("+\
+                            str(last_id) + ",'" + self.nombre + "'," + str(self.precio) + ",'" + self.codigo_producto + "'," + str(idProducto) + ")"
+                        
+                        curs.execute(sql)
+                        conn.commit()
+                        
+                        # Direccionando hacia DetalleBoleta
+                        DetalleBoleta().metodoPago()
+                        value = False
+            
+            except ValueError:
+                    print("")
+
+
+class Boleta:
+    numero_boleta = 0
+    
+    def __init__(self, numero_boleta=0):
+        self.numero_boleta = numero_boleta
+
+    def generandoBoleta(self):
+        
+        # Generando numero de boleta
+        sql = "SELECT id_boleta, numero_boleta FROM boleta ORDER BY id_boleta"
+        curs.execute(sql)
+        datos = curs.fetchall()
+        for dato in datos:
+            dato
+        idBoleta = dato[0]+1
+        self.numero_boleta = dato[1]+100
+        
+        # Insertando datos en tabla BOLETA
+        sql_boleta = "INSERT INTO boleta(id_boleta, numero_boleta) VALUES("+str(idBoleta)+","+str(self.numero_boleta)+")"
+        curs.execute(sql_boleta)
+        #conn.commit()
+        
+        # Itera el ID de VENTA
+        sql_id = "SELECT id_venta FROM venta ORDER BY id_venta"
+        curs.execute(sql_id)
+        ids = curs.fetchall()
+        for id in ids:
+            id
+        last_id_venta = id[0]
+        
+        # Insertando NUMERO_BOLETA en DETALLE_BOLETA
+        sql_detBol = "UPDATE venta SET numero_boleta="+str(self.numero_boleta) + " WHERE id_venta="+str(last_id_venta)
+        curs.execute(sql_detBol)
+        conn.commit()
+        
+        print("\n*** BOLETA GENERADA ***\n")
+        breakpoint
+
+class DetalleBoleta(Boleta):
+    precio_total = 0
+    iva = 0
+    metodo_pago = ""
+    
+    def __init__(self, precio_total=0, iva=0, metodo_pago=""):
+        self.precio_total = precio_total
+        self.iva = iva
+        self.metodo_pago = metodo_pago
+    
+    def generarDetalleBoleta(self):
+        
+        # Itera el ID de VENTA
+        sql_id = "SELECT id_venta FROM venta ORDER BY id_venta"
+        curs.execute(sql_id)
+        ids = curs.fetchall()
+        for id in ids:
+            id
+        last_id_venta = id[0]
+        
+        # Itera ventas para extraer valores de la tabla VENTA
+        sql_venta = "SELECT precio_total, iva, metodo_pago, id_producto FROM venta WHERE id_venta="+str(last_id_venta)
+        curs.execute(sql_venta)
+        datosVenta = curs.fetchall()
+        for datos in datosVenta:
+            datos
+        self.precio_total = datos[0]
+        self.iva = datos[1]
+        self.metodo_pago = datos[2]
+        idProducto = datos[3]
+        
+        # Itera el ID de DETALLE_BOLETA
+        sql_id = "SELECT id_det_boleta FROM detalle_boleta ORDER BY id_det_boleta"
+        curs.execute(sql_id)
+        ids = curs.fetchall()
+        for id in ids:
+            id
+        last_id_detBol = id[0]+1
+        
+        # Itera el ID de DETALLE_BOLETA (vinculo id_boleta)
+        sql_idBoleta = "SELECT id_boleta FROM detalle_boleta ORDER BY id_boleta"
+        curs.execute(sql_idBoleta)
+        ids = curs.fetchall()
+        for id in ids:
+            id
+        last_id_Bol = id[0]+1
+        
+        # Insertando datos en DETALLE_BOLETA
+        sql_detBol = "INSERT INTO detalle_boleta(id_det_boleta, precio_total, iva, id_producto, metodo_pago, id_boleta) VALUES("+\
+            str(last_id_detBol)+","+str(self.precio_total)+","+str(self.iva)+","+str(idProducto)+",'"+self.metodo_pago+"',"+str(last_id_Bol)+")"
+        curs.execute(sql_detBol)
+        conn.commit()
+        
+        # Direccionando a Boleta
+        Boleta().generandoBoleta()
+    
+    def metodoPago(self):
+        
+        # Funcion local de metodoPago()
+        def addToDBVentas(selectMetodoPago):
+            
+            # Itera el ID de VENTAS
+            sql_id = "SELECT id_venta FROM venta ORDER BY id_venta"
+            curs.execute(sql_id)
+            ids = curs.fetchall()
+            for id in ids:
+                id
+            last_id = id[0]
+            
+            self.metodo_pago = selectMetodoPago
+            self.iva = 1.19
+            curs.execute("SELECT precio_producto FROM venta WHERE id_venta = "+str(last_id))
+            valor = curs.fetchall()
+            for precio in valor:
+                self.precio_total = precio[0]*self.iva
+                
+                sql = "UPDATE venta SET metodo_pago='"+self.metodo_pago+"', iva=19"+",precio_total="+str(self.precio_total)+\
+                    "WHERE id_venta = "+str(last_id)
+                curs.execute(sql)
+                conn.commit()
+            
+            # Generando Detalle de Boleta
+            self.generarDetalleBoleta()
+        
+        # Menu para seleccionar el Metodo de Pago
+        bucle = True
+        while bucle:
+            try:
+                print("""
+                    ** METODOS DE PAGO **
+                    1.- Efectivo
+                    2.- Debito
+                    3.- Credito
+                    """)
+                opc = int(input("Seleccione el metodo de pago: "))
+                
+                if opc == 1:
+                    self.metodo_pago = 'Efectivo'
+                    # Aqui funcion agregar a DB
+                    addToDBVentas(self.metodo_pago)
+                    bucle = False
+                
+                elif opc == 2:
+                    self.metodo_pago = 'Debito'             
+                    # Aqui funcion agregar a DB
+                    addToDBVentas(self.metodo_pago)
+                    bucle = False
+                
+                elif opc == 3:
+                    self.metodo_pago = 'Credito'                    
+                    # Aqui funcion agregar a DB
+                    addToDBVentas(self.metodo_pago)
+                    bucle = False
+                
+                else:
+                    print("Opcion no valida!\n")
+            
+            except ValueError:
+                print("Dato ingresado no es valido!\n")
+            
