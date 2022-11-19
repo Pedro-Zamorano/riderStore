@@ -1,4 +1,11 @@
 from riderStoreCore import *
+import cx_Oracle
+
+# Conexion a la BBDD
+#connstr = "riderStore/RiderCore22@localhost:1521/XEPDB1" # Acceso BBDD PC escritorio
+connstr = "riderStore/RiderCore22@192.168.56.1:1521/XEPDB1" # Acceso BBDD Notebook
+conn = cx_Oracle.connect(connstr)
+curs = conn.cursor()
 
 # Menu principal
 def menu():
@@ -38,7 +45,24 @@ def opcMenu(opc):
     
     # Mostrar todas las ventas
     elif opc == 3:
-        print("opcion 3")
+        print("\n*** TODAS LAS VENTAS REALIZADAS ***\n")
+        # Resumen de la compra realizada
+        sql_ventas = "SELECT numero_boleta, nombre, descripcion, precio, iva, precio_total, metodo_pago\
+            FROM producto\
+            JOIN detalle_boleta USING (id_producto)\
+            JOIN boleta USING (id_boleta)\
+            ORDER BY id_boleta"
+        curs.execute(sql_ventas)
+        ventas = curs.fetchall()
+        for venta in ventas:
+            print(f"Boleta N°: {venta[0]}\n\
+                Producto: {venta[1]}\n\
+                Descripcion: {venta[2]}\n\
+                Valor Producto: {venta[3]}\n\
+                IVA %: {venta[4]}\n\
+                Monto Pagado: {venta[5]}\n\
+                Metodo de Pago: {venta[6]}\n")
+        menu()
     
     # Salir
     elif opc == 4:
