@@ -16,14 +16,22 @@ curs.execute(sql_venta_realizada)
 ventaLista = curs.fetchall()
 
 for venta in ventaLista:
-    venta
-print(f"Boleta N°: {venta[0]}\n\
+    print(f"Boleta N°: {venta[0]}\n\
         Producto: {venta[1]}\n\
         Descripcion: {venta[2]}\n\
         Valor Producto: {venta[3]}\n\
         IVA %: {venta[4]}\n\
         Monto Pagado: {venta[5]}\n\
         Metodo de Pago: {venta[6]}\n")
+#print(f"\nFuera del for{venta}")
+
+"""print(f"Boleta N°: {venta[0]}\n\
+        Producto: {venta[1]}\n\
+        Descripcion: {venta[2]}\n\
+        Valor Producto: {venta[3]}\n\
+        IVA %: {venta[4]}\n\
+        Monto Pagado: {venta[5]}\n\
+        Metodo de Pago: {venta[6]}\n")"""
 
 curs.close()
 conn.close()

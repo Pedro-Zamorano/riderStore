@@ -1,7 +1,6 @@
 import cx_Oracle
 
 # Conexion a la BBDD
-#connstr = "riderStore/RiderCore22@localhost:1521/XEPDB1" # Acceso BBDD PC escritorio
 connstr = "riderStore/RiderCore22@192.168.56.1:1521/XEPDB1" # Acceso BBDD Notebook
 conn = cx_Oracle.connect(connstr)
 curs = conn.cursor()
@@ -14,7 +13,7 @@ class Persona:
     rut = ''
     direccion = ''
     ciudad = ''
-    telefono = 0
+    telefono = ''
     email = ''
 
     def __init__(self, nombre, apellido_paterno, apellido_materno, rut, direccion, ciudad, telefono, email):
@@ -27,40 +26,68 @@ class Persona:
         self.telefono = telefono
         self.email = email
 
+    def registrarUsuario(self):
+        sql_idPersona = "SELECT id_persona from persona ORDER BY id_persona"
+        curs.execute(sql_idPersona)
+        idPersona = curs.fetchall()
+        for ids in idPersona:
+            ids
+        last_idPers = ids[0]+1
+        
+        sql_addPersona = "INSERT INTO persona(id_persona, nombre, apellido_paterno, apellido_materno, rut, direccion, ciudad, telefono, email) VALUES("\
+            +str(last_idPers)+",'"+self.nombre+"','"+self.apellido_paterno+"','"+self.apellido_materno+"','"+self.rut+"','"+self.direccion+"','"+self.ciudad+"','"+\
+            self.telefono+"','"+self.email+"')"
+        curs.execute(sql_addPersona)
+        conn.commit()
 
-class Cliente:
-    nombre = ''
-    apellido_paterno = ''
-    telefono = 0
-    email = ''
-    
-    def __init__(self, nombre, apellido_paterno, telefono, email):
-        self.nombre = nombre
-        self.apellido_paterno = apellido_paterno
-        self.telefono = telefono
-        self.email = email 
-
-
-class Colaborador:
-    nombre = ''
-    apellido_paterno = ''
-    rut = ''
-    telefono = ''
+class Colaborador(Persona):
+    contrasena = ''
     prevision = ''
     cargo = ''
     jefe_directo = ''
     tipo_contrato = ''
     
-    def __init__(self, nombre, apellido_paterno, rut, telefono, prevision, cargo, jefe_directo, tipo_contrato):
-        self.nombre = nombre
-        self.apellido_paterno = apellido_paterno
-        self.rut = rut
-        self.telefono = telefono
-        self.prevision = prevision
+    def __init__(self, contrasena, cargo="", jefe_directo="", tipo_contrato=""):
+        self.contrasena = contrasena
         self.cargo = cargo
         self.jefe_directo = jefe_directo
         self.tipo_contrato = tipo_contrato
-
+    
+    def registrarColaborador(self):
+        # Iterar el id_colaborador
+        sql_idColaborador = "SELECT id_colaborador from colaborador ORDER BY id_colaborador"
+        curs.execute(sql_idColaborador)
+        idCol = curs.fetchall()
+        for ids in idCol:
+            ids
+        last_idCol = ids[0]+1
+        
+        # Itereando y capturando el ultimo id_persona
+        sql_idPersona = "SELECT id_persona from persona ORDER BY id_persona"
+        curs.execute(sql_idPersona)
+        idPersona = curs.fetchall()
+        for ids in idPersona:
+            ids
+        last_idPers = ids[0]
+        
+        # Agregando datos en Tabla COLABORADOR
+        sql_colaborador = "INSERT INTO colaborador(id_colaborador, cargo, jefe_directo, tipo_contrato, id_persona, contrasena) VALUES("+\
+            str(last_idCol)+",'"+self.cargo+"','"+self.jefe_directo+"','"+self.tipo_contrato+"',"+str(last_idPers)+",'"+self.contrasena+"')"
+        curs.execute(sql_colaborador)
+        conn.commit()
+        print("\n*** USUARIO REGISTRADO SATISFACTORIAMENTE ***\n")
+        
+        sql_verUsRegis = "SELECT nombre, apellido_paterno, email, cargo, jefe_directo FROM persona JOIN colaborador USING(id_persona)"
+        curs.execute(sql_verUsRegis)
+        verUsRegis = curs.fetchall()
+        for ver in verUsRegis:
+            ver
+        print(f"Ultimo registro:\n\
+        Nombre Colaborador: {ver[0]}\n\
+        Apellido Colaborador: {ver[1]}\n\
+        Email: {ver[2]}\n\
+        Cargo: {ver[3]}\n\
+        Jefe Directo: {ver[4]}\n")
 
 class Producto:
     nombre = ''
@@ -291,23 +318,18 @@ class DetalleBoleta(Boleta):
                     self.metodo_pago = 'Efectivo'
                     # Aqui funcion agregar a DB
                     addToDBVentas(self.metodo_pago)
-                    bucle = False
-                
+                    bucle = False                
                 elif opc == 2:
                     self.metodo_pago = 'Debito'             
                     # Aqui funcion agregar a DB
                     addToDBVentas(self.metodo_pago)
-                    bucle = False
-                
+                    bucle = False                
                 elif opc == 3:
                     self.metodo_pago = 'Credito'                    
                     # Aqui funcion agregar a DB
                     addToDBVentas(self.metodo_pago)
-                    bucle = False
-                
+                    bucle = False                
                 else:
-                    print("Opcion no valida!\n")
-            
+                    print("Opcion no valida!\n")            
             except ValueError:
                 print("Dato ingresado no es valido!\n")
-            

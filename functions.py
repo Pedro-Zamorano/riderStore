@@ -36,7 +36,33 @@ def menu():
 def opcMenu(opc):
     # Registrar usuario
     if opc == 1:
-        print("opcion 1")
+        print("Registro de usuario")
+        
+        rut= input("RUT: ")
+        nombre= input("Nombre: ")
+        apellido_paterno = input("Apellido paterno: ")
+        apellido_materno = input("Apellido materno: ")
+        email=input("Email: ")
+        telefono = input("Numero de telefono: ")
+        direccion = input("Direccion: ")
+        ciudad = input("Ciudad: ")
+        
+        # Carga los datos ingresado en la BBDD tabla PERSONA
+        createUser = Persona(nombre, apellido_paterno, apellido_materno, rut, direccion, ciudad, telefono, email)
+        createUser.registrarUsuario()
+        
+        contrasena= input("Cree una contraseña de 4 digitos: ")
+        confirmar_contrasena= input("Confirmar contraseña: ")
+        
+        if contrasena == confirmar_contrasena and len(contrasena)==4 and contrasena!="    ":
+            cargo = input("Ingrese el cargo de la persona: ")
+            tipoContrato = input("Tipo de contrato (a plazo/indefinido): ")
+            jefeDirecto = input("Nombre del jefe directo: ")
+            setCol = Colaborador(contrasena, cargo, jefeDirecto, tipoContrato)
+            setCol.registrarColaborador()
+        else:
+            print("Su contraseña no cumple los parametros requeridos, compruebe nuevamente")
+            
     
     # Iniciar venta
     elif opc == 2: 
